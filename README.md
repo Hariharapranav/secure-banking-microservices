@@ -58,20 +58,25 @@ CREATE DATABASE banking_notification_db;
 
 ### 2. Start Kafka via Docker
 ```bash
+cd backend
 docker-compose up -d
 ```
 
 ### 3. Build & Run
 ```bash
+cd backend
 mvn clean install -DskipTests
 
 # Run each service in separate terminals
 cd auth-service && mvn spring-boot:run
-cd user-service && mvn spring-boot:run
-cd account-service && mvn spring-boot:run
-cd transaction-service && mvn spring-boot:run
-cd notification-service && mvn spring-boot:run
-cd api-gateway && mvn spring-boot:run
+cd ../user-service && mvn spring-boot:run
+cd ../account-service && mvn spring-boot:run
+cd ../transaction-service && mvn spring-boot:run
+cd ../notification-service && mvn spring-boot:run
+cd ../api-gateway && mvn spring-boot:run
+
+# Or run using the start script (Windows)
+.\start-all.bat
 ```
 
 ### 4. Test
