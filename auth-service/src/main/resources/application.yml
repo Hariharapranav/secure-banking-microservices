@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/banking_auth_db
+    username: postgres
+    password: edsols
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+jwt:
+  secret: bXlTdXBlclNlY3VyZUJhbmtpbmdBcHBsaWNhdGlvblNlY3JldEtleUZvckpXVFRva2VuR2VuZXJhdGlvbjIwMjQ=
+  expiration: 86400000  # 24 hours in milliseconds
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.banking.auth: DEBUG
+    org.springframework.security: DEBUG
