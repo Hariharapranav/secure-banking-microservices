@@ -19,6 +19,10 @@ spring:
         format_sql: true
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      properties:
+        max.block.ms: 2000
+        request.timeout.ms: 2000
 
 jwt:
   secret: bXlTdXBlclNlY3VyZUJhbmtpbmdBcHBsaWNhdGlvblNlY3JldEtleUZvckpXVFRva2VuR2VuZXJhdGlvbjIwMjQ=

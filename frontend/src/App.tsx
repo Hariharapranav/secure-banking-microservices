@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="w-full h-full font-sans tracking-tight">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -24,7 +24,7 @@ const App = () => {
 };
 
 // Private route wrapper
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" replace />;
 };
