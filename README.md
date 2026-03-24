@@ -1,20 +1,25 @@
-# 🏦 Secure Banking System
+# 🏦 Secure Banking System (Full-Stack)
 
-A production-level **microservices-based banking backend** built with Java 17, Spring Boot, Spring Cloud Gateway, Spring Security (JWT), Apache Kafka, and MySQL.
+A production-level **full-stack microservices banking application** built with a Modern React Frontend, Java 17, Spring Boot, Spring Cloud Gateway, Spring Security (JWT), Apache Kafka, and PostgreSQL.
 
 ## Architecture
 
 ```
-                    ┌──────────────────────────┐
-                    │   API Gateway (:8080)     │
-                    │  JWT Validation + Routing │
-                    └─────┬──┬──┬──┬───────────┘
+                    ┌─────────────────────────┐
+                    │    React Frontend       │
+                    │  (Vite + TailwindCSS)   │
+                    └────────────┬────────────┘
+                                 │ REST / JWT
+                    ┌────────────▼────────────┐
+                    │   API Gateway (:8080)   │
+                    │   JWT Route Filtering   │
+                    └─────┬──┬──┬──┬──────────┘
                           │  │  │  │
               ┌───────────┘  │  │  └───────────┐
               ▼              ▼  ▼              ▼
         ┌──────────┐  ┌─────────┐  ┌──────────────┐
-        │ Auth Svc  │  │User Svc │  │ Account Svc  │
-        │  :8081    │  │ :8082   │  │   :8083      │
+        │ Auth Svc │  │User Svc │  │ Account Svc  │
+        │  :8081   │  │ :8082   │  │   :8083      │
         └──────────┘  └─────────┘  └──────┬───────┘
                                           │ REST
                                    ┌──────┴───────┐
@@ -28,25 +33,32 @@ A production-level **microservices-based banking backend** built with Java 17, S
                                    └──────────────┘
 ```
 
-## Services
+## Features
 
-| Service | Port | Description |
-|---------|------|-------------|
-| **API Gateway** | 8080 | Routes requests, validates JWT tokens |
-| **Auth Service** | 8081 | User registration, login, JWT token generation |
-| **User Service** | 8082 | User profile management (KYC, personal details) |
-| **Account Service** | 8083 | Bank account operations (create, balance, status) |
-| **Transaction Service** | 8084 | Deposit, withdraw, transfer + Kafka producer |
-| **Notification Service** | 8085 | Kafka consumer, logs & stores notifications |
+### 🎨 Frontend (Modern Fintech UI)
+- ✅ **Glassmorphism Aesthetic**: Sleek frosted glass cards, glow effects, and abstract animated backgrounds.
+- ✅ **GPay/Paytm Style Layout**: Gorgeous circular quick-action buttons for Deposits, Withdrawals, and Transfers.
+- ✅ **Dynamic Modals**: Intercepts actions securely with beautifully animated modal overlays.
+- ✅ **Real-Time Animated Success States**: Smooth 'Checkmark' animations upon transaction completion.
+- ✅ **State Management & JWT Guarding**: Persistent login checking and API route interception.
+
+### ⚙️ Backend (Microservices)
+- ✅ **Event-driven architecture** using Apache Kafka for real-time notifications.
+- ✅ **API Gateway** acting as a single entry point with centralized JWT routing verification.
+- ✅ **Database-per-service pattern**: 5 independent PostgreSQL databases ensuring high isolation.
+- ✅ **Compensating transactions**: Handles cross-service transaction rollbacks if partial failures occur.
 
 ## Quick Start
 
 ### Prerequisites
-- Java 17+, Maven, MySQL 8.0+, Apache Kafka
+- Java 17+, Maven
+- PostgreSQL 14+
+- Docker Desktop (for Kafka & Zookeeper)
+- Node.js 18+ (for Frontend)
 
-### 1. Create Databases
-1. Ensure PostgreSQL is running on port 5432.
-2. Open pgAdmin or psql and run:
+### 1. Database Setup
+Ensure PostgreSQL is running on port 5432 with credentials `postgres` (or update the `application.yml` files).  
+Create the 5 distinct databases:
 ```sql
 CREATE DATABASE banking_auth_db;
 CREATE DATABASE banking_user_db;
@@ -54,58 +66,37 @@ CREATE DATABASE banking_account_db;
 CREATE DATABASE banking_transaction_db;
 CREATE DATABASE banking_notification_db;
 ```
-3. Default credentials in `application.yml` are `postgres`/`your password`. Update if yours differ.
 
-### 2. Start Kafka via Docker
+### 2. Start Kafka (Docker)
 ```bash
 cd backend
 docker-compose up -d
 ```
 
-### 3. Build & Run
+### 3. Run Backend Microservices
+Open a terminal in the `backend` directory:
 ```bash
-cd backend
-mvn clean install -DskipTests
-
-# Run each service in separate terminals
-cd auth-service && mvn spring-boot:run
-cd ../user-service && mvn spring-boot:run
-cd ../account-service && mvn spring-boot:run
-cd ../transaction-service && mvn spring-boot:run
-cd ../notification-service && mvn spring-boot:run
-cd ../api-gateway && mvn spring-boot:run
-
-# Or run using the start script (Windows)
+# Windows users can start all 6 services with a single script
 .\start-all.bat
 ```
+*(Alternatively, you can manually run `mvn spring-boot:run` inside each of the 6 service directories).*
 
-### 4. Test
+### 4. Run the React Frontend
+Open a new terminal in the `frontend` directory:
 ```bash
-# Register
-curl -X POST http://localhost:8080/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john","email":"john@bank.com","password":"Pass123","fullName":"John Doe"}'
-
-# Login (get JWT token)
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john","password":"Pass123"}'
+cd frontend
+npm install
+npm run dev
 ```
 
-## Key Features
-- ✅ JWT Authentication with Role-Based Access (USER/ADMIN)
-- ✅ API Gateway with centralized JWT validation
-- ✅ Event-driven notifications via Kafka
-- ✅ Paginated & sorted transaction history
-- ✅ Compensating transactions for money transfers
-- ✅ Global exception handling per service
-- ✅ Swagger/OpenAPI documentation
-- ✅ Spring Cache for read optimization
-- ✅ DTO validation with Bean Validation
-- ✅ Database-per-service pattern
+### 5. Access the App
+Open your browser and navigate to:
+**http://localhost:5173**
 
-## Swagger UI
-Each service has Swagger at: `http://localhost:{port}/swagger-ui.html`
+Register a new account, create your KYC profile, open a savings account, and try out the gorgeous new deposit and transfer features!
 
 ## Tech Stack
-Java 17 • Spring Boot 3.2 • Spring Cloud Gateway • Spring Security • Spring Data JPA • MySQL • Apache Kafka • Lombok • SpringDoc OpenAPI
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, Lucide Icons, React Router, Axios
+- **Backend**: Java 17, Spring Boot 3.2, Spring Cloud Gateway, Spring Security
+- **Data & Messaging**: PostgreSQL, Apache Kafka
+- **Tools**: Docker, Swagger/OpenAPI
